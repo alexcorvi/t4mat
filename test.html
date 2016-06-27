@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Head</title>
+    </head>
+    
+    <body>
+        
+        <div style="margin:0 auto;padding:70px">
+            <h1>Testing</h1>
+            
+            <br>Time: <br><input type="time" id="timePicker"><br>
+            <br>Seconds:<br><input type="number" id="SecondsPicker"><br>
+            <br>Date: <br><input type="date" id="datePicker">
+            <p>Those will be converted to epoch and passed to the function</p>
+            
+            <button onclick="cal();">Calculate</button>
+            
+            <br><br>
+            
+            Enter format format: <input type="text" id="format">
+            <br><br>
+            <hr>
+            
+            
+            
+            function result: <span id="result" style="color:blue"></span>
+            
+        </div>
+        
+        <script type="text/javascript" src="readEpochTime.js"></script>
+        <script type="text/javascript">
+        var cal = function () {
+            var seconds = document.getElementById("SecondsPicker").value;
+            var time = document.getElementById("timePicker").value;
+            var date = document.getElementById("datePicker").value;
+            
+            var t = date + " " + time + ":" + seconds;
+            
+            var format = document.getElementById("format").value;
+            if (format.length < 1) format = "SS";
+            
+            var result = readableDate(new Date(t).getTime(),format);
+            
+            document.getElementById("result").innerHTML = result;
+        }
+
+            
+        </script>
+        
+    </body>
+    
+</html>
