@@ -1,27 +1,26 @@
-    function readableDate(t,format) {
-        
-        var defaultFormat = "auto:[s]+[D] [m]/[yyyy]"
-        
+(function(exports) {
+    exports.hets = function (t1,format,t2) {
+        var defaultFormat = "auto:[s]+[D] [m]/[yyyy]";
         /**
-         * 
+         *
          * The format
-         * 
+         *
          * Things that are decided here:
          * - Order of units
          *      Just by placing the d before the m or the D before the M you decide the order
-         * 
+         *
          * - Seperator between units
          *      Using the forward slash (/) between the D and the M will make it as a seperator
-         * 
+         *
          * - format (formal like 1/1/1970 or social like 9 seconds ago)
          *      by using the Ds and the Ms you make it formal, but by placing the S you will make it social
-         *      both formats can also be mixed like ([D]/[mm]/[YYYY] (S)) => will give you Sat. May 05/1996 (20 yrs ago) 
-         * 
+         *      both formats can also be mixed like ([D]/[mm]/[YYYY] (S)) => will give you Sat. May 05/1996 (20 yrs ago)
+         *
          * - whether you want units to be short or long (explanation below)
          * - whether you want units to be literal on numerical (explanation below)
-         * 
+         *
          * incase 1/1/2016
-         * 
+         *
          * [d]: 1
          * [dd]: 01
          * [D]: Fri.
@@ -42,10 +41,10 @@
          * [S]: 6 mins ago
          * [ss]: 6 minutes ago
          * [SS]: 6 minutes ago
-         * 
+         *
          * Note that the letters has to be enclosed in brackets
-         * 
-         * 
+         *
+         *
          * Note: you can also set the format to be "auto", which means it will automatically
          * decide whether the result will be expressed in social or formal format.
          * This can be done like this: (auto:ss+d/M/yy)
@@ -53,37 +52,61 @@
          * value passed is less than one day, then
          * the social format will be used, otherwise
          * the formal format will be used.
-         * 
+         *
         **/
         
         // if no format has been passed then use the default one
         if (typeof format !== "string") format = defaultFormat;
-        
+        if (typeof t2 !== "number") t2 = null;
         
         // current time data
         var CTD = {};
         
-        // how may time units has passed (ends with S)
-        CTD.mseconds    = new Date().getTime();
-        CTD.seconds     = CTD.mseconds/1000;
-        CTD.minutes     = Math.round(CTD.seconds/60);
-        CTD.hours       = Math.round(CTD.minutes/60);
-        CTD.days        = Math.round(CTD.hours/24);
-        CTD.weeks       = Math.round(CTD.days/7);
-        CTD.months      = Math.round(CTD.days/31);
-        CTD.years      = Math.round(CTD.months/12);
-        
         // passed time data (passed to this function)
         var PTD = {};
-        // how may time units has passed (ends with S)
-        PTD.mseconds    = t;
+        
+        /**
+         * 
+         * ABOUT t2 and the following condition
+         * 
+         * The current time can be one of two:
+         * If we passed the t2, the t2 is the current time
+         * If we didn't pass t2, the JS will take the current machine
+         * time and regard it as t2.
+         * 
+         * This is especially usefull when evaluating server times
+         * and there might be a difference between server time,
+         * and machine time.
+         * 
+        **/
+        if(t2===null)  t2 = new Date().getTime();
+        else t2 = new Date(t2).getTime();
+        
+        PTD.mseconds    = t1;
+        CTD.mseconds    = t2;
+        
+        // -- start: social time evaluation ariables
+        // how may time units has passed (ends with S) (since the begining of time till now)
+        CTD.seconds     = CTD.mseconds/1000;
+        CTD.minutes     = CTD.seconds/60;
+        CTD.hours       = CTD.minutes/60;
+        CTD.days        = CTD.hours/24;
+        CTD.weeks       = CTD.days/7;
+        CTD.months      = CTD.days/31;
+        CTD.years      = CTD.months/12;
+        
+        // how may time units has passed (ends with S) (since the begining of time till the passed date)
         PTD.seconds     = PTD.mseconds/1000;
-        PTD.minutes     = Math.round(PTD.seconds/60);
-        PTD.hours       = Math.round(PTD.minutes/60);
-        PTD.days        = Math.round(PTD.hours/24);
-        PTD.weeks       = Math.round(PTD.days/7);
-        PTD.months      = Math.round(PTD.days/31);
-        PTD.years      = Math.round(PTD.months/12);
+        PTD.minutes     = PTD.seconds/60;
+        PTD.hours       = PTD.minutes/60;
+        PTD.days        = PTD.hours/24;
+        PTD.weeks       = PTD.days/7;
+        PTD.months      = PTD.days/31;
+        PTD.years      = PTD.months/12;
+        // -- end: social time evaluation ariables
+        
+        console.log(CTD.years,PTD.years);
+        
         // passed date (month, day, year) (doesn't end with S)
         PTD.day = new Date(PTD.mseconds).getDate();
         PTD.dayOfTheWeek = new Date(PTD.mseconds).getDay();
@@ -95,46 +118,47 @@
             {
                 U:"second",
                 TU:"sec",
-                value: CTD.seconds - PTD.seconds,
+                value: Math.round(CTD.seconds - PTD.seconds),
                 threshold:60,
             },
             {
                 U:"minute",
                 TU:"min",
-                value: CTD.minutes - PTD.minutes,
+                value: Math.round(CTD.minutes - PTD.minutes),
                 threshold:60,
             },
             {
                 U:"hour",
                 TU:"hr",
-                value: CTD.hours - PTD.hours,
+                value: Math.round(CTD.hours - PTD.hours),
                 threshold:24,
             },
             {
                 U:"day",
                 TU:"day",
-                value: CTD.days - PTD.days,
+                value: Math.round(CTD.days - PTD.days),
                 threshold:27,
             },
             {
                 U:"week",
                 TU:"week",
-                value: CTD.weeks - PTD.weeks,
+                value: Math.round(CTD.weeks - PTD.weeks),
                 threshold:4,
             },
             {
                 U:"month",
                 TU:"month",
-                value: CTD.months - PTD.months,
+                value: Math.round(CTD.months - PTD.months),
                 threshold:12,
             },
             {
                 U:"year",
                 TU:"yr",
-                value: CTD.years - PTD.years,
+                value: Math.round(CTD.years - PTD.years),
                 threshold:9999999999999999999,
             },
         ];
+        
         
         // Numeral to literal
         var N2L = {
@@ -180,20 +204,41 @@
             YYYY:"",
         };
         
-        
-        // getting the social values (long and short versions)
-        for (var i = 0; i < DArr.length; i++) {
-            if(DArr[i]["value"] < DArr[i]["threshold"]) {
-                RO.SS = DArr[i]["value"] + " ";
-                RO.SS = RO.SS + DArr[i]["U"];
-                if(DArr[i]["value"] > 1) {
-                    RO.SS = RO.SS + "s";
+        var STimeAgo = function() {
+            // getting the social values (long and short versions)
+            for (var i = 0; i < DArr.length; i++) {
+                if(DArr[i]["value"] < DArr[i]["threshold"]) {
+                    RO.SS = DArr[i]["value"] + " ";
+                    RO.SS = RO.SS + DArr[i]["U"];
+                    if(DArr[i]["value"] > 1) {
+                        RO.SS = RO.SS + "s";
+                    }
+                    RO.SS = RO.SS + " ago";
+                    RO.S = RO.SS.replace(DArr[i]["U"],DArr[i]["TU"]);
+                    break;
                 }
-                RO.SS = RO.SS + " ago";
-                RO.S = RO.SS.replace(DArr[i]["U"],DArr[i]["TU"]);
-                break;
             }
-        }
+        };
+        
+        var STimeIn = function(){
+            // getting the social values (long and short versions)
+            for (var i = 0; i < DArr.length; i++) {
+                var curVal = DArr[i]["value"] * -1;
+                if(curVal < DArr[i]["threshold"]) {
+                    RO.SS = curVal + " ";
+                    RO.SS = RO.SS + DArr[i]["U"];
+                    if(curVal > 1) {
+                        RO.SS = RO.SS + "s";
+                    }
+                    RO.SS = "in " + RO.SS;
+                    RO.S = RO.SS.replace(DArr[i]["U"],DArr[i]["TU"]);
+                    break;
+                }
+            }
+        };
+        
+        if(DArr[0].value < 0) STimeIn();
+        else STimeAgo();
         
         // the formal values
         RO.d = PTD.day;
@@ -217,7 +262,6 @@
         if(format.indexOf("auto:") === 0) {
             var S_StartingIndex = format.indexOf(":");
             var F_StartingIndex = format.indexOf("+");
-            
             if(S_StartingIndex > -1 && F_StartingIndex > -1) {
                 if(DArr[3]["value"] === 0) format = format.substring(S_StartingIndex+1,F_StartingIndex);
                 else format = format.substring(F_StartingIndex+1);
@@ -253,4 +297,5 @@
         format = format.replace("[d]",RO.d);
         
         return format;
-    }
+    };
+})(window.jQuery || window);

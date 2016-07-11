@@ -1,7 +1,10 @@
-# readEpochTime.js
-Will convert epoch time to humanely readable time format
+# Hets.js
+**H**umanly-readable **E**opch **T**ime **S**tamps
 
-** WORK IN PROGRESS **
+** hets.js **
 
-# todo:
- * proper github repo
+
+### [Demo and usage instructions](http://alexcorvi.github.io/hets/index.html).
+
+
+License: The MIT License (MIT) - Copyright (c) 2016 Alex Corvi
