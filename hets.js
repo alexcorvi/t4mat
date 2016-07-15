@@ -1,5 +1,6 @@
-(function(exports) {
-    exports.hets = function (t1,format,t2) {
+(function(window) {
+
+    var hets = function (t1,format,t2) {
         var defaultFormat = "auto:[s]+[D] [m]/[yyyy]";
         /**
          *
@@ -298,4 +299,27 @@
         
         return format;
     };
-})(window.jQuery || window);
+
+    // check js environment
+    if (typeof exports !== "undefined") {
+        // nodejs env
+        if (typeof module !== "undefined" && module.exports) {
+            exports = module.exports = hets;
+        }
+        exports.hets = hets;
+    }
+    else {
+        // requirejs env (optional)
+        if (typeof define === "function" && define.amd) {
+            define("hets", [], function() {
+                return hets;
+            });
+        }else if (typeof jQuery !== "undefined") {
+            jQuery.hets = hets;
+        }
+        else {
+            // browser env
+            window.hets = hets;
+        }
+    }
+})(typeof window === 'object' ? window : this /* it runs in node */ );
