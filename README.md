@@ -1,6 +1,6 @@
 # t4mat
 
-Tiny & easy to use library for date formatting
+Tiny (2.8 KB) & easy to use library for date formatting
 
 ## Installation
 
