@@ -55,8 +55,3 @@ const t4mat = function ({
 };
 
 export default t4mat;
-
-console.log(t4mat({
-	time:new Date().getTime() - 90000000,
-	format: "{D} {yy} {MM} {R}"
-}));
