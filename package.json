@@ -1,8 +1,9 @@
 {
   "name": "t4mat",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Tiny & easy to use library for date formatting",
-  "main": "./dist/t4mat.js",
+  "main": "./dist/index.js",
+  "types":"./dist/index.d.ts",
   "directories": {
     "test": "test"
   },
