@@ -1,6 +1,6 @@
 # t4mat
 
-Tiny (2.8 KB) & easy to use library for date formatting
+Tiny (1 KB when miniified and gzipped) & easy to use library for date formatting
 
 ## Installation
 
@@ -55,7 +55,7 @@ As the above example demonstrates, the library is a mere function that takes an 
 
 
 ### About the relative time
-By default the time you pass in the object will be represented relatively to the current time. However, if you want it to be calculated relative to another time, pass the base time as `t2` in the object.
+By default the time you pass in the object will be represented relatively to the current time. However, if you want it to be calculated relative to another time, pass the base time as `base` in the object.
 
 
 * Example:
@@ -66,14 +66,14 @@ Running this code:
 
 ```javascript
 var formatted = t4mat({
-	t:"2016-01-01T00:00:00.000Z",
+	time:"2016-01-01T00:00:00.000Z",
 	format:"{RR}"
 });
 console.log(formatted);
 // > "1 day ago"
 
 var formatted2 = t4mat({
-	t:"2016-01-03T00:00:00.000Z",
+	time:"2016-01-03T00:00:00.000Z",
 	format:"{RR}"
 });
 console.log(formatted2);
@@ -85,16 +85,16 @@ So by default the relative time calculation takes the current browser/machine ti
 
 ```javascript
 var formatted = t4mat({
-	t1:"2016-01-01T00:00:00.000Z",
-	t2:"2016-01-02T00:00:00.000Z"
+	time:"2016-01-01T00:00:00.000Z",
+	base:"2016-01-02T00:00:00.000Z"
 	format:"{RR}"
 });
 console.log(formatted);
 // > "1 day ago"
 
 var formatted2 = t4mat({
-	t1:"2016-01-01T00:00:00.000Z", // same as above
-	t2:"2016-01-03T00:00:00.000Z" // different base time
+	time:"2016-01-01T00:00:00.000Z", // same as above
+	base:"2016-01-03T00:00:00.000Z" // different base time
 	format:"{RR}"
 });
 console.log(formatted2);
